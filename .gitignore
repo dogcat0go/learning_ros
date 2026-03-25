@@ -1,0 +1,20 @@
+# ROS 2 / colcon build artifacts
+/build/
+/install/
+/log/
+/.colcon_install_layout
+/COLCON_IGNORE
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Editor / OS files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
