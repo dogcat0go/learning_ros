@@ -2,7 +2,7 @@
 Author: LCOIT dogcat.let@gmail.com
 Date: 2026-03-24 18:10:27
 LastEditors: LCOIT dogcat.let@gmail.com
-LastEditTime: 2026-04-10 15:08:45
+LastEditTime: 2026-04-10 15:39:29
 FilePath: /fish_bot_ws/src/fishbot_description/launch/display_robot.launch.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
@@ -23,7 +23,7 @@ def generate_launch_description():
     # 获取功能包的share路径
     package_share_directory = get_package_share_directory('fishbot_description')
     xacro_path = os.path.join(package_share_directory, 'urdf', 'fishbot/fishbot.urdf.xacro')
-    gazebo_world_path = os.path.join(package_share_directory, 'world', 'custom_room.world')
+    gazebo_world_path = os.path.join(package_share_directory, 'world', 'remote_fishbot_room.world')
 
     # rviz_config_path = os.path.join(package_share_directory, 'config', 'lesson1.rviz')
     # gazebo会自动拉起对应的rviz2节点，所以不需要再拉起rviz2节点
