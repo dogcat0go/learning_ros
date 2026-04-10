@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:include filename="$(find fishbot_description)/urdf/fishbot/common_inertia.xacro" />
+    <xacro:macro name="laser_xacro" params="xyz:='0 0 0' laser_pole_len:=0.05 laser_head_len:=0.02">
+        <!-- 雷达支撑杆：圆柱以 link 原点为中心，沿 Z 从 -pole_len/2 到 +pole_len/2 -->
+        <link name="laser_cylinder_link">
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder radius="0.01" length="${laser_pole_len}" />
+                </geometry>
+                <material name="black"/>
+            </visual>
+            <collision> 
+                <!-- Keep collision aligned with the link frame -->
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder radius="0.01" length="${laser_pole_len}" />
+                </geometry>
+                <material name="black"/>
+            </collision>
+            <xacro:cylinder_inertia m="0.01" r="0.01" h="${laser_pole_len}" />
+        </link>
+        
+        <!-- parent=base_link：杆中心在 base_link 系中的位置由 xyz 给出（见 fishbot 中与底盘半高对齐） -->
+        <joint name="laser_cylinder_joint" type="fixed">
+            <parent link="base_link"/>
+            <child link="laser_cylinder_link"/>
+            <origin xyz="${xyz}" rpy="0 0 0"/>
+        </joint>
+        <!-- 雷达激光器 -->
+        <link name="laser_link">
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder radius="0.02" length="${laser_head_len}" />
+                </geometry>
+                <material name="black"/>
+            </visual>
+            <collision> 
+                <!-- Keep collision aligned with the link frame -->
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder radius="0.02" length="${laser_head_len}" />
+                </geometry>
+                <material name="black"/>
+            </collision>
+            <xacro:cylinder_inertia m="0.03" r="0.02" h="${laser_head_len}" />
+        </link>
+
+        <!-- 子连杆原点：杆顶 z=pole_len/2，再接激光头半高 head_len/2，避免两节几何脱节 -->
+        <joint name="laser_link_joint" type="fixed">
+            <parent link="laser_cylinder_link"/>
+            <child link="laser_link"/>
+            <origin xyz="0 0 ${laser_pole_len/2 + laser_head_len/2}" rpy="0 0 0"/>
+        </joint>
+
+        <gazebo reference="laser_link">
+            <material>Gazebo/Black</material>
+        </gazebo>
+        <gazebo reference="laser_cylinder_link">
+            <material>Gazebo/Black</material>
+        </gazebo>
+
+    </xacro:macro>
+
+</robot>

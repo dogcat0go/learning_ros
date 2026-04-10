@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- 与 wheel.urdf.xacro 中 ${wheel_name}_wheel_joint 命名一致 -->
+    <xacro:macro name="ros2_control_wheel_joint" params="wheel_name">
+        <joint name="${wheel_name}_wheel_joint">
+            <command_interface name="velocity">
+                <param name="min">-1</param>
+                <param name="max">1</param>
+            </command_interface>
+            <command_interface name="effort">
+                <param name="min">-0.1</param>
+                <param name="max">0.1</param>
+            </command_interface>
+            <state_interface name="position" />
+            <state_interface name="velocity" />
+            <state_interface name="effort" />
+        </joint>
+    </xacro:macro>
+
+    <xacro:macro name="fishbot_ros2_control" params="wheel_left:=left wheel_right:=right">
+        <ros2_control name="FishBotGazeboSystem" type="system">
+            <hardware>
+                <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+            </hardware>
+            <xacro:ros2_control_wheel_joint wheel_name="${wheel_left}" />
+            <xacro:ros2_control_wheel_joint wheel_name="${wheel_right}" />
+        </ros2_control>
+        <gazebo>
+            <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+                <parameters>$(find fishbot_description)/config/fishbot_ros2_controller.yaml</parameters>
+                <ros>
+                    <remapping>/fishbot_diff_drive_controller/cmd_vel_unstamped:=/cmd_vel</remapping>
+                    <remapping>/fishbot_diff_drive_controller/odom:=/odom</remapping>
+                </ros>
+            </plugin>
+        </gazebo>
+    </xacro:macro>
+</robot>
